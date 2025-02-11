@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import ProductCard from "../components/ProductCard"
 
-
 interface Product {
   _id: string
   name: string
@@ -15,6 +14,7 @@ interface Product {
 
 export default function MenuPage() {
   const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState<boolean>(true) // New loading state
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -28,11 +28,17 @@ export default function MenuPage() {
         }
       } catch (error) {
         console.error("Error fetching products:", error)
+      } finally {
+        setLoading(false) // Set loading to false after fetching
       }
     }
 
     fetchProducts()
   }, [])
+
+  if (loading) {
+    return <div className="text-center">Loading...</div> // Loading indicator
+  }
 
   return (
     <div className="container mx-auto py-8 px-4">
@@ -45,4 +51,3 @@ export default function MenuPage() {
     </div>
   )
 }
-

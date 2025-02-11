@@ -14,6 +14,8 @@ interface Product {
 
 const FeaturedProducts = () => {
   const [products, setProducts] = useState<Product[]>([])
+  const [loading, setLoading] = useState<boolean>(true) // Loading state
+  const [error, setError] = useState<string | null>(null) // Error state
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -26,12 +28,23 @@ const FeaturedProducts = () => {
           throw new Error("Failed to fetch products")
         }
       } catch (error) {
+        setError("Error fetching products")
         console.error("Error fetching products:", error)
+      } finally {
+        setLoading(false)
       }
     }
 
     fetchProducts()
   }, [])
+
+  if (loading) {
+    return <div className="text-center py-8">Loading...</div> // Loading state
+  }
+
+  if (error) {
+    return <div className="text-center py-8 text-red-500">{error}</div> // Error state
+  }
 
   return (
     <section id="featured-products" className="py-16">
@@ -48,4 +61,3 @@ const FeaturedProducts = () => {
 }
 
 export default FeaturedProducts
-
